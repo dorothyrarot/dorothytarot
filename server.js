@@ -1,31 +1,23 @@
-{\rtf1\ansi\ansicpg949\cocoartf2822
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
 
-\f0\fs24 \cf0 const express = require("express");\
-const http = require("http");\
-const \{ Server \} = require("socket.io");\
-\
-const app = express();\
-const server = http.createServer(app);\
-\
-const io = new Server(server, \{ cors: \{ origin: "*" \} \});\
-\
-io.on("connection", (socket) => \{\
-  console.log("\uc0\u49324 \u50857 \u51088  \u51217 \u49549 :", socket.id);\
-\
-  socket.on("pickCard", (card) => \{\
-    io.emit("pickCard", card);\
-  \});\
-\
-  socket.on("chatMessage", (msg) => \{\
-    io.emit("chatMessage", \{ user: socket.id, text: msg \});\
-  \});\
-\});\
-\
-const PORT = process.env.PORT || 4000;\
-server.listen(PORT, () => console.log(`\uc0\u49436 \u48260  \u49892 \u54665 \u51473 : $\{PORT\}`));\
-}
+const app = express();
+const server = http.createServer(app);
+
+const io = new Server(server, { cors: { origin: "*" } });
+
+io.on("connection", (socket) => {
+  console.log("사용자 접속:", socket.id);
+
+  socket.on("pickCard", (card) => {
+    io.emit("pickCard", card);
+  });
+
+  socket.on("chatMessage", (msg) => {
+    io.emit("chatMessage", { user: socket.id, text: msg });
+  });
+});
+
+const PORT = process.env.PORT || 4000;
+server.listen(PORT, () => console.log(`서버 실행중: ${PORT}`));
